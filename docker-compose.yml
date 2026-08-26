@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: test_postgres
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: testdb
+    volumes:
+      # named volume (DB persistence)
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: test_redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      # named volume for persistence
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx:alpine
+    container_name: test_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      # bind mount (DIRECTORY TEST)
+      - ./test_files/static:/usr/share/nginx/html:ro
+
+      # bind mount config file (SINGLE FILE TEST)
+      - ./test_files/nginx.conf:/etc/nginx/nginx.conf:ro
+
+  file_writer:
+    image: alpine:3.20
+    container_name: test_file_writer
+    command: >
+      sh -c "mkdir -p /data &&
+             echo 'hello from container' > /data/output.txt &&
+             sleep 3600"
+    volumes:
+      # named volume (persistent data directory)
+      - writer_data:/data
+
+  alpine_shell:
+    image: alpine:3.20
+    container_name: test_alpine_shell
+    command: sh
+    tty: true
+    stdin_open: true
+    volumes:
+      # mount ALL test data together for inspection
+      - postgres_data:/mnt/postgres_data
+      - redis_data:/mnt/redis_data
+      - writer_data:/mnt/writer_data
+      - ./test_files:/mnt/bind_mounts
+
+volumes:
+  postgres_data:
+  redis_data:
+  writer_data:
