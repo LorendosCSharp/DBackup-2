@@ -1,17 +1,39 @@
 mod typed;
+mod core;
+use std::fs;
 
 
-use typed::backup_service::BackupService;
+use crate::{core::serialize::serialize_all, typed::{backup_service::BackupService, settings::{self, Settings}}};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let service =BackupService::test();
-    let service2=BackupService::default();
-    let yaml = serde_saphyr::to_string(&service)?;
-    let yaml2 = serde_saphyr::to_string(&service2)?;
-    std::fs::write("backup.yaml", &yaml)?;
+fn main(){
 
-    println!("{yaml}");
-    println!("{yaml2}");
+    let settings:Settings;
+    match Settings::read(){
+        Ok(_settings)=>{
+            settings=_settings;
+        }
+        Err(error)=>{
+            eprintln!("Error while loading settings: {error}");
+            return;
+        }
+    }
 
-    Ok(())
+    let backup_services:Vec<BackupService>;
+
+    match serialize_all(settings.config_path){
+        Ok(services)=>{
+            println!("Loaded all services");
+            backup_services=services;
+        }
+        Err(error)=>{
+            eprintln!("Error while loading all services: {error}");
+            return;
+        }
+    }
+    for service in &backup_services{
+
+        let name = &service.name;
+        println!("{name}");
+    }
+
 }

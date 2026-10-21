@@ -9,17 +9,17 @@ pub enum Destination {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TelegramDestination {
-    pub chat_id: i32,
-    pub bot_keypath: String,
+    chat_id: i32,
+    bot_keypath: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SSHDestination {
-    pub user: String,
-    pub ip: String,
-    pub port: i32,
-    pub key_path: String,
-    pub remote_directory: String,
+    user: String,
+    ip: String,
+    port: i32,
+    key_path: String,
+    remote_directory: String,
 }
 
 impl Default for SSHDestination {

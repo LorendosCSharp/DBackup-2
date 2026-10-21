@@ -1,0 +1,17 @@
+- name: daily_backup
+  destinations:
+  - type: ssh
+    config:
+      user: "file_user"
+      ip: "192.168.0.12"
+      port: 22
+      key_path: ""
+      remote_directory: ""
+  targets:
+  - type: file
+    config:
+      type: normal
+      config: 
+        path: /backups/test
+  cron: 0 0 * * *
+  include: true

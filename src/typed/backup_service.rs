@@ -15,7 +15,6 @@ pub struct BackupService {
     pub cron: String,
     pub include: bool,
 
-    id: String, 
 }
 
 impl BackupService {
@@ -26,7 +25,6 @@ impl BackupService {
             targets,
             cron,
             include,
-            id: Self::generate_id(),
         }
     }
 
@@ -38,10 +36,10 @@ impl BackupService {
             Destination::Telegram(TelegramDestination::default()),
         ],
         vec![
-            Target::File(FileTarget::Normal(FileJustTarget {})),
-            Target::File(FileTarget::Container(FileContainerTarget {})),
+            Target::File(FileTarget::Normal(FileJustTarget::new("/some/path/to/file".into()))),
+            Target::File(FileTarget::Container(FileContainerTarget::new("test_file_container".into(),true,"/some/path/to/file/inside/container".into()))),
             Target::Postgres(PostgresTarget::Normal(PostgresJustTarget {})),
-            Target::Postgres(PostgresTarget::Container(PostgresContainerTarget {})),
+            Target::Postgres(PostgresTarget::Container(PostgresContainerTarget::new("test_postgres_container".into(),true))),
         ],
         "0 0 * * *".into(),
         true,
@@ -49,13 +47,7 @@ impl BackupService {
         return service;
     }
 
-    fn generate_id() -> String {
-        return uuid::Uuid::new_v4().to_string();
-    }
 
-    pub fn id(&self) -> &str {
-        &self.id
-    }
 }
 
 

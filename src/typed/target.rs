@@ -19,10 +19,34 @@ pub enum FileTarget {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct FileJustTarget {}
+pub struct FileJustTarget {
+    path:String
+}
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct FileContainerTarget {}
+pub struct FileContainerTarget {
+    container_name:String,
+    stop_on_backup:bool,
+    path:String
+}
+
+
+impl FileJustTarget{
+    pub fn new(path:String,) -> Self {
+        Self {
+            path,
+        }
+    }
+}
+impl FileContainerTarget{
+    pub fn new(container_name:String,stop_on_backup:bool,path:String,) -> Self {
+        Self {
+            container_name,
+            stop_on_backup,
+            path,
+        }
+    }
+}
 
 
 // ------------------------------------------------------------------
@@ -39,7 +63,26 @@ pub enum PostgresTarget {
 pub struct PostgresJustTarget {}
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct PostgresContainerTarget {}
+pub struct PostgresContainerTarget {
+    container_name:String,
+    stop_on_backup:bool,
+}
 
+
+impl PostgresJustTarget{
+    pub fn new() -> Self {
+        Self {
+        
+        }
+    }
+}
+impl PostgresContainerTarget{
+    pub fn new(container_name:String,stop_on_backup:bool,) -> Self {
+        Self {
+            container_name,
+            stop_on_backup,
+        }
+    }
+}
 
 // ------------------------------------------------------------------

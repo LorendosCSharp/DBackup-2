@@ -15,11 +15,15 @@ targets:
 - type: file
   config:
     type: normal
-    config: {}
+    config:
+      path: /some/path/to/file
 - type: file
   config:
     type: container
-    config: {}
+    config:
+      container_name: test_file_container
+      stop_on_backup: true
+      path: /some/path/to/file/inside/container
 - type: postgres
   config:
     type: normal
@@ -27,7 +31,8 @@ targets:
 - type: postgres
   config:
     type: container
-    config: {}
+    config:
+      container_name: test_postgres_container
+      stop_on_backup: true
 cron: 0 0 * * *
 include: true
-id: 76ece762-2a61-4df8-a21c-5d552261a68d
