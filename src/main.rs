@@ -1,14 +1,17 @@
+mod typed;
 
-use serde::Deserialize;
 
+use typed::backup_service::BackupService;
 
-#[derive(Debug, Deserialize)]
-struct Config {
-    name: String,
-    enabled: bool,
-    retries: i32
-}
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let service =BackupService::test();
+    let service2=BackupService::default();
+    let yaml = serde_saphyr::to_string(&service)?;
+    let yaml2 = serde_saphyr::to_string(&service2)?;
+    std::fs::write("backup.yaml", &yaml)?;
 
-fn main() {
-    println!("Hello, world!");
+    println!("{yaml}");
+    println!("{yaml2}");
+
+    Ok(())
 }

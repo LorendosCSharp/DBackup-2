@@ -1,0 +1,33 @@
+name: daily_backup
+destinations:
+- type: ssh
+  config:
+    user: ""
+    ip: ""
+    port: 22
+    key_path: ""
+    remote_directory: ""
+- type: telegram
+  config:
+    chat_id: 0
+    bot_keypath: ""
+targets:
+- type: file
+  config:
+    type: normal
+    config: {}
+- type: file
+  config:
+    type: container
+    config: {}
+- type: postgres
+  config:
+    type: normal
+    config: {}
+- type: postgres
+  config:
+    type: container
+    config: {}
+cron: 0 0 * * *
+include: true
+id: 76ece762-2a61-4df8-a21c-5d552261a68d
