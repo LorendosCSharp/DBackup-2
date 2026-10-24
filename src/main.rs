@@ -1,9 +1,7 @@
-mod typed;
 mod core;
-use std::fs;
 
 
-use crate::{core::serialize::serialize_all, typed::{backup_service::BackupService, settings::{self, Settings}}};
+use crate::{ core::{backup_service::BackupService,backup_service::serialize_all, settings::{self, Settings}}};
 
 fn main(){
 

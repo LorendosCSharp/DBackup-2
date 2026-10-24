@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::fs;
 
-use crate::typed::error::ConfigError;
+use crate::core::error::ConfigError;
 
 #[derive(Debug,Deserialize)]
 pub struct Settings{
