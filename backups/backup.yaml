@@ -1,0 +1,27 @@
+- name: test_1
+  destinations:
+  - type: ssh
+    config:
+      user: ""
+      ip: ""
+      port: 22
+      key_path: ""
+      remote_directory: ""
+  - type: telegram
+    config:
+      chat_id: 0
+      bot_keypath: ""
+  targets:
+  - type: file
+    config:
+      path: "/home/lorendos/Projects/DBackup3.0"
+      is_container: false
+      container_name: ""
+      stop_on_backup: true
+  - type: postgres
+    config:
+      is_container: false
+      container_name: ""
+      stop_on_backup: true
+  cron: 0 0 * * *
+  include: true

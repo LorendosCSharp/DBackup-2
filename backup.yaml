@@ -14,25 +14,14 @@ destinations:
 targets:
 - type: file
   config:
-    type: normal
-    config:
-      path: /some/path/to/file
-- type: file
-  config:
-    type: container
-    config:
-      container_name: test_file_container
-      stop_on_backup: true
-      path: /some/path/to/file/inside/container
+    path: ""
+    is_container: false
+    container_name: ""
+    stop_on_backup: true
 - type: postgres
   config:
-    type: normal
-    config: {}
-- type: postgres
-  config:
-    type: container
-    config:
-      container_name: test_postgres_container
-      stop_on_backup: true
+    is_container: false
+    container_name: ""
+    stop_on_backup: true
 cron: 0 0 * * *
 include: true

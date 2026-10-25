@@ -1,11 +1,13 @@
 mod core;
+use std::fs;
 
-
-use crate::{ core::{backup_service::BackupService,backup_service::serialize_all, settings::{self, Settings}}};
+use crate::core::{backup_service::{self, BackupService, serialize_all, trigger_backups}, settings::{self, Settings}};
 
 fn main(){
 
+
     let settings:Settings;
+
     match Settings::read(){
         Ok(_settings)=>{
             settings=_settings;
@@ -16,9 +18,13 @@ fn main(){
         }
     }
 
+    // I need this to create a test backup.yaml I could use later
+    // let test_backup_service:BackupService = BackupService::test();
+    // let yaml = serde_saphyr::to_string(&test_backup_service).unwrap();
+    // fs::write("backup.yaml",yaml);
     let backup_services:Vec<BackupService>;
 
-    match serialize_all(settings.config_path){
+    match serialize_all(settings.config_path.clone()){
         Ok(services)=>{
             println!("Loaded all services");
             backup_services=services;
@@ -28,10 +34,6 @@ fn main(){
             return;
         }
     }
-    for service in &backup_services{
-
-        let name = &service.name;
-        println!("{name}");
-    }
+    trigger_backups(&settings, backup_services);
 
 }

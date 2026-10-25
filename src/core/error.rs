@@ -18,4 +18,10 @@ pub enum ConfigError {
         path: String,
         message: String,
     },
+
+    #[error("Failed to get the name in '{path}': {message}")]
+    NoName {
+        path: String,
+        message: String,
+    },
 }

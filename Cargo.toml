@@ -8,3 +8,5 @@ serde = { version = "1", features = ["derive"] }
 serde-saphyr = { version = "2", default-features = false, features = ["deserialize","serialize"] }
 uuid = { version = "1", features = ["v4"] }
 thiserror = "2"
+tar = "0.4.46"
+flate2 = "1.1.10"

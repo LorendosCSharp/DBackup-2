@@ -1,11 +1,12 @@
 use serde::Deserialize;
-use std::fs;
+use std::{path::PathBuf,fs};
 
 use crate::core::error::ConfigError;
 
 #[derive(Debug,Deserialize)]
 pub struct Settings{
-    pub config_path:String
+    pub config_path:PathBuf,
+    pub archive_path:PathBuf,
 }
 
 impl Settings{

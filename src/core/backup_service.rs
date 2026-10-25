@@ -1,12 +1,15 @@
+use serde::de::value::Error;
 use serde::{Deserialize, Serialize};
-use crate::core::error::ConfigError;
-use std::fs;
+use crate::core::error::{self, ConfigError};
+use crate::core::settings::Settings;
+use crate::core::target::generate_archive_target;
+use std::{path::PathBuf,fs};
 use super::destination::{
     Destination, SSHDestination, TelegramDestination,
 };
 use super::target::{
-    Target, FileTarget, FileJustTarget, FileContainerTarget,
-    PostgresTarget, PostgresJustTarget, PostgresContainerTarget,
+    Target, FileTarget,
+    PostgresTarget,TargetFunction
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -38,10 +41,8 @@ impl BackupService {
             Destination::Telegram(TelegramDestination::default()),
         ],
         vec![
-            Target::File(FileTarget::Normal(FileJustTarget::new("/some/path/to/file".into()))),
-            Target::File(FileTarget::Container(FileContainerTarget::new("test_file_container".into(),true,"/some/path/to/file/inside/container".into()))),
-            Target::Postgres(PostgresTarget::Normal(PostgresJustTarget {})),
-            Target::Postgres(PostgresTarget::Container(PostgresContainerTarget::new("test_postgres_container".into(),true))),
+            Target::File(FileTarget::default()),
+            Target::Postgres(PostgresTarget::default()),
         ],
         "0 0 * * *".into(),
         true,
@@ -65,7 +66,7 @@ impl Default for BackupService{
     }
 }
 
-pub fn serialize_all(path: String,) -> Result<Vec<BackupService>, ConfigError> {
+pub fn serialize_all(path: PathBuf,) -> Result<Vec<BackupService>, ConfigError> {
     let mut data: Vec<BackupService> = Vec::new();
 
     let files = fs::read_dir(&path).map_err(ConfigError::DirectoryRead)?;
@@ -91,14 +92,24 @@ pub fn serialize_all(path: String,) -> Result<Vec<BackupService>, ConfigError> {
     Ok(data)
 }
 
-pub fn trigger_backups(backup_services:Vec<BackupService>)/*->Result<String,ConfigError>*/{
+pub fn trigger_backups(settings:&Settings,backup_services:Vec<BackupService>)/*->Result<String,ConfigError>*/{
 
     for backup_service in backup_services{
         let service:BackupService = backup_service;
         if !service.include{
             continue;
         }
+        let service_name:String=service.name;
         for target in service.targets{
+            match generate_archive_target(settings, target){
+                Ok(path)=>{
+                    let path_o=path.display().to_string();
+                    println!("some good: {path_o}, {service_name}")
+                }
+                Err(error)=>{
+                    eprintln!("{error:?}")
+                }
+            }
         }
         for destination in service.destinations{
             
